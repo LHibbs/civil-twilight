@@ -5,6 +5,8 @@ using UnityEngine;
 public class ShipControls : MonoBehaviour {
 
     private Rigidbody2D rb;
+    private float moveSpeed = 10f;
+    private float rotateSpeed = 50f;
 
     // Use this for initialization
     void Start () {
@@ -13,7 +15,9 @@ public class ShipControls : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        rb.velocity = new Vector3(1, 0, 0);
-
+        // Forward/Backwards
+        rb.velocity = transform.up * Input.GetAxis("ShipVertical") * moveSpeed;
+        // Turn Left/Right
+        rb.angularVelocity = rotateSpeed * Input.GetAxis("ShipHorizontal");
     }
 }
