@@ -6,16 +6,16 @@ public class PlayerInteraction : MonoBehaviour {
 
 	private List<GameObject> adjInteractables = new List<GameObject>(); 
 	private float repairRate = 5f; 
-	private GameObject ship; 
+	private GameObject shipHull; 
 
 	void Start () {
-		ship = GameObject.Find ("Ship"); 
+		shipHull = GameObject.Find ("Hull"); 
 	}
 
 	void Update () {
 		if(Input.GetButton("Fire1")) { 
 			if(adjInteractables.Count != 0) {
-				ship.GetComponent<ShipStatus>().repairHole (adjInteractables[0].GetComponent<ShipHole>(), repairRate); 
+                shipHull.GetComponent<ShipHull>().RepairHole(adjInteractables[0].GetComponent<ShipHole>(), repairRate); 
 				//adjInteractables [0].interact (); 
 			}
 		}

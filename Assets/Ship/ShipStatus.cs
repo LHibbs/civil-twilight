@@ -37,7 +37,7 @@ public class ShipStatus : MonoBehaviour {
 	}
 
 	void CreateHole(float x, float y){
-		holes.Add (Instantiate (holePrefab, new Vector3 (x, y, 0.005f), Quaternion.Euler(90,0,0)).GetComponent<ShipHole>()); 
+		holes.Add (Instantiate (holePrefab, new Vector3 (x, y, 0.005f), Quaternion.Euler(90,0,0), transform.parent).GetComponent<ShipHole>()); 
 	}
 
 	void CheckForLeaks(){
