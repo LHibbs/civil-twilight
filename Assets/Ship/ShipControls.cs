@@ -22,6 +22,7 @@ public class ShipControls : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+
         // Forward/Backwards
         rb.velocity = transform.up * Input.GetAxis("ShipVertical") * moveSpeed;
         // Turn Left/Right
@@ -30,7 +31,7 @@ public class ShipControls : MonoBehaviour {
 		//Get my new rotation
 		float curAngle = transform.eulerAngles.z;
 		rotationThisFrame = curAngle - lastAngle;
-		Debug.Log ("Last: " + lastAngle + " | Current: " + curAngle + " | Rotation: " + rotationThisFrame);
+		//Debug.Log ("Last: " + lastAngle + " | Current: " + curAngle + " | Rotation: " + rotationThisFrame);
 		lastAngle = curAngle;
 
     }
