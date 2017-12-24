@@ -7,6 +7,7 @@ public class ShipControls : MonoBehaviour {
     private Rigidbody2D rb;
     private float moveSpeed = 10f;
     private float rotateSpeed = 50f;
+	private GameObject captainsChair; 
 
 	private float lastAngle = 0f;
 	private float rotationThisFrame;
@@ -18,6 +19,7 @@ public class ShipControls : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody2D>();
+		captainsChair = GameObject.Find ("CaptainsChair"); 
     }
 
     // Update is called once per frame
@@ -35,8 +37,5 @@ public class ShipControls : MonoBehaviour {
 		lastAngle = curAngle;
 
     }
-
- 
-
-
+		
 }

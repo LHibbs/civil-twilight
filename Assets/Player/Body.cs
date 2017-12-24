@@ -6,7 +6,10 @@ public class Body : MonoBehaviour {
 
 	Rigidbody2D rb;
 	private float moveSpeed = 2f;
-	private InputDevice input;
+	private InputDevice playerInput;
+	public InputDevice PlayerInput {
+		get {return playerInput;}
+	}
 
 	private GameObject ship;
 	private GameObject shipHull; 
@@ -28,7 +31,7 @@ public class Body : MonoBehaviour {
 		//Move the player with the ship and with their input
 		Rigidbody2D shipRB = ship.GetComponent<Rigidbody2D> ();
 		Vector3 shipV = new Vector3 (shipRB.velocity.x, shipRB.velocity.y);
-		Vector3 playerV = new Vector3 (-moveSpeed * Input.GetAxis (input.Horizontal), moveSpeed * Input.GetAxis (input.Vertical));
+		Vector3 playerV = new Vector3 (-moveSpeed * Input.GetAxis (playerInput.Horizontal), moveSpeed * Input.GetAxis (playerInput.Vertical));
 		rb.velocity =  shipV + transform.TransformDirection(playerV); 
 
 		//If the player hits the interact button, then repair the hole they are standing on
@@ -55,6 +58,7 @@ public class Body : MonoBehaviour {
 	}
 
 	public void SetInput(InputDevice i) {
-		input = i;
+		playerInput = i;
 	}
+		
 }

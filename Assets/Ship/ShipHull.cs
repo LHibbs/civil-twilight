@@ -7,8 +7,7 @@ public class ShipHull : MonoBehaviour {
     [SerializeField]
     private float air = 100f;
     List<ShipHole> holes = new List<ShipHole>();
-    public GameObject holePrefab;
-	public GameObject friendlyCube; 
+    public GameObject holePrefab; 
     private float airLossRate = 0.07f;
 
 	private float xDim = 2f; 
@@ -33,16 +32,14 @@ public class ShipHull : MonoBehaviour {
 			BoxCollider2D shipCollider = transform.parent.gameObject.GetComponent<BoxCollider2D> (); 
 			float xPos = transform.position.x;
 			float yPos = transform.position.y;
-			float angle = transform.eulerAngles.z; 
-
-			angle = Mathf.Deg2Rad * angle; 
+			float angle = Mathf.Deg2Rad * transform.eulerAngles.z; 
         
-			float randomX = Random.Range (xPos - xDim, xPos + xDim); 
-			float randomY = Random.Range (yPos - yDim, yPos + yDim); 
+			float randomX = Random.Range (- xDim, xDim); 
+			float randomY = Random.Range (- yDim, yDim); 
 			float xFinal = randomX * Mathf.Cos (angle) - randomY * Mathf.Sin (angle);
 			float yFinal = randomY * Mathf.Cos (angle) + randomX * Mathf.Sin (angle); 
 
-			CreateHole(xFinal, yFinal);
+			CreateHole(xFinal + xPos, yFinal + yPos);
        }
     }
 
@@ -71,4 +68,5 @@ public class ShipHull : MonoBehaviour {
         if (hole.fixHole(repairRate))
             holes.Remove(hole);
     }
+
 }
