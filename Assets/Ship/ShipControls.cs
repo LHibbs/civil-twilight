@@ -30,7 +30,7 @@ public class ShipControls : MonoBehaviour {
 		//Get my new rotation
 		float curAngle = transform.eulerAngles.z;
 		rotationThisFrame = curAngle - lastAngle;
-		Debug.Log ("Last: " + lastAngle + " | Current: " + curAngle + " | Rotation: " + rotationThisFrame);
+		//Debug.Log ("Last: " + lastAngle + " | Current: " + curAngle + " | Rotation: " + rotationThisFrame);
 		lastAngle = curAngle;
 
     }
