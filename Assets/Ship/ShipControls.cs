@@ -8,6 +8,13 @@ public class ShipControls : MonoBehaviour {
     private float moveSpeed = 10f;
     private float rotateSpeed = 50f;
 
+	private float lastAngle = 0f;
+	private float rotationThisFrame;
+
+	public float RotationThisFrame {
+		get { return rotationThisFrame; }
+	}
+
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody2D>();
@@ -19,5 +26,16 @@ public class ShipControls : MonoBehaviour {
         rb.velocity = transform.up * Input.GetAxis("ShipVertical") * moveSpeed;
         // Turn Left/Right
         rb.angularVelocity = rotateSpeed * Input.GetAxis("ShipHorizontal");
+
+		//Get my new rotation
+		float curAngle = transform.eulerAngles.z;
+		rotationThisFrame = curAngle - lastAngle;
+		Debug.Log ("Last: " + lastAngle + " | Current: " + curAngle + " | Rotation: " + rotationThisFrame);
+		lastAngle = curAngle;
+
     }
+
+ 
+
+
 }

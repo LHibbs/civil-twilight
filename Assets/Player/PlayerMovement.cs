@@ -17,6 +17,16 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		rb.velocity = new Vector3 (ship.GetComponent<Rigidbody2D>().velocity.x + -moveSpeed * Input.GetAxis("Horizontal"), ship.GetComponent<Rigidbody2D>().velocity.y + moveSpeed * Input.GetAxis("Vertical"), 0f);
+
+		//Rotate around ship
+		transform.RotateAround(ship.transform.position, Vector3.forward, ship.GetComponent<ShipControls>().RotationThisFrame);
+
+
+		rb.velocity = new Vector3(ship.GetComponent<Rigidbody2D>().velocity.x, ship.GetComponent<Rigidbody2D>().velocity.y) + transform.TransformDirection(
+			new Vector3 (-moveSpeed * Input.GetAxis("Horizontal"), 
+						 moveSpeed * Input.GetAxis("Vertical"), 
+						0f)
+		);
+
     }
 }
