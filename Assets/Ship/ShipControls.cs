@@ -6,7 +6,9 @@ public class ShipControls : MonoBehaviour {
 
     private Rigidbody2D rb;
     private float moveSpeed = 10f;
-    private float rotateSpeed = 50f;
+	private float maxMoveSpeed = 20f;
+    private float rotateSpeed = 10f;
+	private float maxRotateSpeed = 40f;
 	private GameObject captainsChair; 
 
 	private float lastAngle = 0f;
@@ -25,15 +27,25 @@ public class ShipControls : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
+		/*This is VELOCITY. We are now using forces
         // Forward/Backwards
         rb.velocity = transform.up * Input.GetAxis("ShipVertical") * moveSpeed;
         // Turn Left/Right
         rb.angularVelocity = rotateSpeed * Input.GetAxis("ShipHorizontal");
+		*/
+
+		//Forwad/Backwards
+		if(rb.velocity.magnitude > -maxMoveSpeed && rb.velocity.magnitude < maxMoveSpeed) {
+			rb.AddForce(transform.up * Input.GetAxis("ShipVertical") * moveSpeed);
+		}
+		//Turn
+		if(rb.angularVelocity > -maxRotateSpeed && rb.angularVelocity < maxRotateSpeed) {
+			rb.AddTorque (Input.GetAxis ("ShipHorizontal") * rotateSpeed);
+		}
 
 		//Get my new rotation
 		float curAngle = transform.eulerAngles.z;
 		rotationThisFrame = curAngle - lastAngle;
-		//Debug.Log ("Last: " + lastAngle + " | Current: " + curAngle + " | Rotation: " + rotationThisFrame);
 		lastAngle = curAngle;
 
     }

@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour {
 		I4 = new InputDevice("Horizontal4", "Vertical4", "Interact4");
 
 		//Psuedo Player
-		psuedoPlayer = Instantiate (playerPrefab, new Vector3(1, 1, 4f), Quaternion.identity, transform);
+		psuedoPlayer = Instantiate (playerPrefab, transform.position + new Vector3(1, 1, 4f), Quaternion.identity, transform);
 		Body ppb = psuedoPlayer.GetComponent<Body> (); //Set the body the player starts with to have the player's input
 		ppb.SetInput (psuedoInput);
 		//p1.SetRole();

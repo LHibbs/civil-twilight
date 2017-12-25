@@ -26,7 +26,7 @@ public class ShipHull : MonoBehaviour {
 
     void RandomHoleGenerator()
     {
-		if (Random.value < 0.1) //.005
+		if (Random.value < 0.005)
 		{
 			BoxCollider2D shipCollider = transform.parent.gameObject.GetComponent<BoxCollider2D> ();
 			float xPos = transform.position.x;
