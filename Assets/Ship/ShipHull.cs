@@ -15,7 +15,6 @@ public class ShipHull : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
         RandomHoleGenerator();
         CheckForLeaks();
 
@@ -27,13 +26,12 @@ public class ShipHull : MonoBehaviour {
 
     void RandomHoleGenerator()
     {
-		if (Random.value < 0.01) //.005
+		if (Random.value < 0.1) //.005
 		{
-			BoxCollider2D shipCollider = transform.parent.gameObject.GetComponent<BoxCollider2D> (); 
+			BoxCollider2D shipCollider = transform.parent.gameObject.GetComponent<BoxCollider2D> ();
 			float xPos = transform.position.x;
 			float yPos = transform.position.y;
 			float angle = Mathf.Deg2Rad * transform.eulerAngles.z; 
-        
 			float randomX = Random.Range (- xDim, xDim); 
 			float randomY = Random.Range (- yDim, yDim); 
 			float xFinal = randomX * Mathf.Cos (angle) - randomY * Mathf.Sin (angle);
