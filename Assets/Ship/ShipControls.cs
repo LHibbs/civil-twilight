@@ -12,8 +12,13 @@ public class ShipControls : MonoBehaviour {
 	private CaptainsChair captainsChair; 
 
 	private GameObject sail;
+	private float ropeMoveSpeed = 0.01f;
 	private float leftRopeLength = 3f;
 	private float rightRopeLength = 3f;
+	private Vector2 leftAnchor;
+	private Vector2 rightAnchor;
+	float shipWidth = 2f;
+	float shipHeight = 1.12f;
 
 	private float lastAngle = 0f;
 	private float rotationThisFrame;
@@ -31,8 +36,6 @@ public class ShipControls : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-
-
 		/*This is VELOCITY. We are now using forces
         // Forward/Backwards
         rb.velocity = transform.up * Input.GetAxis("ShipVertical") * moveSpeed;
@@ -47,68 +50,59 @@ public class ShipControls : MonoBehaviour {
 		rotationThisFrame = curAngle - lastAngle;
 		lastAngle = curAngle;
 
-
 		//Sail controls
-		float moveAmount = 0.01f;
 		//Left
 		if(Input.GetKey(KeyCode.I)) {
-			leftRopeLength += moveAmount;
+			leftRopeLength += ropeMoveSpeed;
 		} else if(Input.GetKey(KeyCode.K)) {
-			leftRopeLength -= moveAmount;
+			leftRopeLength -= ropeMoveSpeed;
 		}
 		//Right
 		if(Input.GetKey(KeyCode.O)) {
-			rightRopeLength += moveAmount;
+			rightRopeLength += ropeMoveSpeed;
 		} else if (Input.GetKey(KeyCode.L)) {
-			rightRopeLength -= moveAmount;
+			rightRopeLength -= ropeMoveSpeed;
 		}
-		//Line Renderer
-		Vector3 leftVertex = new Vector3(2f, 1.12f + leftRopeLength, 4);
-		Vector3 rightVertex = new Vector3 (- 2f, 1.12f + rightRopeLength, 4);
-		//loosing the z coordinate, it is getting set to zero so the line is hidden. Need to change
-		Vector3 rotLeft = RotatePointAroundOrigin(transform.position, leftVertex, transform.eulerAngles.z);
-		Vector3 rotRight = RotatePointAroundOrigin (transform.position, rightVertex, transform.eulerAngles.z);
-		LineRenderer lr = sail.GetComponent<LineRenderer>();
-		lr.SetPosition(0, rotLeft);
-		lr.SetPosition (1, rotRight);
-		//Debug.Log ("Left: " + leftVertex + " | Right: " + rightVertex);
-		Debug.Log ("Rot Left: " + rotLeft + " | RotRight: " + rotRight);
 
+		MoveSail ();
+		DrawSail ();
     }
 
+	void MoveSail () {
+		Vector2 leftVertex = new Vector3(shipWidth, shipHeight + leftRopeLength);
+		Vector2 rightVertex = new Vector3 (-shipWidth, shipHeight + rightRopeLength);
+		leftAnchor = RotatePointAroundOrigin(transform.position, leftVertex, transform.eulerAngles.z);
+		rightAnchor = RotatePointAroundOrigin (transform.position, rightVertex, transform.eulerAngles.z);
+	}
+
+	void DrawSail() {
+		float sailZLayer = 3f;
+		LineRenderer lr = sail.GetComponent<LineRenderer>();
+		lr.SetPosition(0, new Vector3(leftAnchor.x, leftAnchor.y, sailZLayer));
+		lr.SetPosition (1, new Vector3(rightAnchor.x, rightAnchor.y, sailZLayer));
+	}
+
 	/*angle is in degrees*/ 
-	public static Vector2 RotatePointAroundOrigin(Vector2 localOrigin, Vector2 newLoc, float angle) {
+	public static Vector2 RotatePointAroundOrigin(Vector2 localOrigin, Vector2 point, float angle) {
 		angle = angle * Mathf.Deg2Rad; 
-		float xFinal = newLoc.x * Mathf.Cos (angle) - newLoc.y * Mathf.Sin (angle);
-		float yFinal = newLoc.y * Mathf.Cos (angle) + newLoc.x * Mathf.Sin (angle);
+		float xFinal = point.x * Mathf.Cos (angle) - point.y * Mathf.Sin (angle);
+		float yFinal = point.y * Mathf.Cos (angle) + point.x * Mathf.Sin (angle);
 
 		return new Vector2(xFinal + localOrigin.x, yFinal + localOrigin.y);
-
-
-		/*float angle = Mathf.Deg2Rad * a;
-		float xFinal = p.x * Mathf.Cos (angle) - p.y * Mathf.Sin (angle);
-		float yFinal = p.y * Mathf.Cos (angle) + p.x * Mathf.Sin (angle); 
-
-		return new Vector2(xFinal + p.x, yFinal + p.y);*/
 	}
+
+
 		
 	void OnTriggerStay2D(Collider2D coll) {
 		if(coll.tag == "Wind") {
 			float magnitude = 2f;
 			//Assuming: Angle = 0 deg
 			//Assuming: Magnitude = 10f
-			/*
-			 * new angle = 90 - tan^-1(left-right / width of ship) //Angle to vertical 
-			 * new vector with x = mag * cos theta, y = mag * sin theta
-			 * 
-			 */
-			float newAngle = Mathf.Atan ((leftRopeLength - rightRopeLength) / 4);
+			float newAngle = Mathf.Atan ((rightRopeLength - leftRopeLength) / 4);
 			float newMag = Mathf.Cos (newAngle) * magnitude; 
-			//float newMag = Mathf.Sqrt(Mathf.Pow(magnitude * Mathf.Cos (newAngle),2) + Mathf.Pow(magnitude * Mathf.Sin (newAngle),2));
 			Debug.Log ("New angle " + Mathf.Rad2Deg * newAngle + "New mag " + newMag); 
-			//rb.AddForceAtPosition ();
-			Vector2 v2 = new Vector2(newMag * Mathf.Cos(newAngle), newMag * Mathf.Sin(newAngle)); 
-			Vector2 pos = new Vector2 (0, 1.12f + ((leftRopeLength + rightRopeLength) / 2)); 
+			Vector2 v2 = new Vector2(newMag * Mathf.Sin(newAngle), newMag * Mathf.Cos(newAngle)); 
+			Vector2 pos = new Vector2 (transform.position.x, transform.position.y + shipHeight + ((leftRopeLength + rightRopeLength) / 2)); 
 			rb.AddForceAtPosition(v2,pos); 
 
 		}
