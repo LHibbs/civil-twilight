@@ -91,20 +91,30 @@ public class ShipControls : MonoBehaviour {
 		return new Vector2(xFinal + localOrigin.x, yFinal + localOrigin.y);
 	}
 
+	void WindMovement(GameObject wind) {
 
+		float magnitude = 2f;
+		float sailAngleToShip = Mathf.Atan ((rightRopeLength - leftRopeLength) / 2);//local angle
+
+		float windAngleToShip = wind.transform.eulerAngles.z - transform.eulerAngles.z;
+		float diffWindSail = (90 - (180 - (sailAngleToShip - windAngleToShip)));
+		float magWindOnSail = -magnitude * Mathf.Sin (diffWindSail * Mathf.Deg2Rad); 
+		Debug.Log ("angle: " + diffWindSail + " | magnitude: " + magWindOnSail);
+
+		//Assuming: Magnitude = 2f
+		//Assuming: Angle = 0 deg
+		//float newAngle = Mathf.Atan ((rightRopeLength - leftRopeLength) / 2);//local angle
+		//float newMag = Mathf.Cos (sailAngleToShip) * magWindOnSail;
+
+		//Debug.Log (sailAngleToShip);
+		Vector2 force = new Vector2(magWindOnSail * Mathf.Sin(sailAngleToShip), magWindOnSail * Mathf.Cos(sailAngleToShip)); 
+		Vector2 pos = new Vector2 (transform.position.x, transform.position.y + shipHeight + ((leftRopeLength + rightRopeLength) / 2)); 
+		rb.AddForceAtPosition(force, pos);
+	}
 		
 	void OnTriggerStay2D(Collider2D coll) {
-		if(coll.tag == "Wind") {
-			float magnitude = 2f;
-			//Assuming: Angle = 0 deg
-			//Assuming: Magnitude = 10f
-			float newAngle = Mathf.Atan ((rightRopeLength - leftRopeLength) / 4);
-			float newMag = Mathf.Cos (newAngle) * magnitude; 
-			Debug.Log ("New angle " + Mathf.Rad2Deg * newAngle + "New mag " + newMag); 
-			Vector2 v2 = new Vector2(newMag * Mathf.Sin(newAngle), newMag * Mathf.Cos(newAngle)); 
-			Vector2 pos = new Vector2 (transform.position.x, transform.position.y + shipHeight + ((leftRopeLength + rightRopeLength) / 2)); 
-			rb.AddForceAtPosition(v2,pos); 
-
+		if (coll.tag == "Wind") {
+			WindMovement (coll.gameObject);
 		}
 	}
 
