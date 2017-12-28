@@ -26,7 +26,6 @@ public class CaptainsChair : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D coll){
 		if(coll.tag == "Player")
 		{
-			Debug.Log ("Player entered!"); 
 			activeBody = coll.gameObject.GetComponent<Body> ();
 		}
 	}
@@ -34,7 +33,6 @@ public class CaptainsChair : MonoBehaviour {
 	void OnTriggerExit2D(Collider2D coll){
 		if(coll.tag == "Player")
 		{
-			Debug.Log ("Player exited!"); 
 			if( coll.gameObject.GetComponent<Body> () == activeBody) {
 				activeBody = null; 
 			}

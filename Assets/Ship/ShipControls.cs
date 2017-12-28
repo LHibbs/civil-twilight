@@ -63,19 +63,38 @@ public class ShipControls : MonoBehaviour {
 			rightRopeLength -= moveAmount;
 		}
 		//Line Renderer
-		Vector3 leftVertex = new Vector3(transform.position.x + 2f, transform.position.y + 1.12f + leftRopeLength, 4);
-		Vector3 rightVertex = new Vector3 (transform.position.x - 2f, transform.position.y + 1.12f + rightRopeLength, 4);
-				
+		Vector3 leftVertex = new Vector3(2f, 1.12f + leftRopeLength, 4);
+		Vector3 rightVertex = new Vector3 (- 2f, 1.12f + rightRopeLength, 4);
+		//loosing the z coordinate, it is getting set to zero so the line is hidden. Need to change
+		Vector3 rotLeft = RotatePointAroundOrigin(transform.position, leftVertex, transform.eulerAngles.z);
+		Vector3 rotRight = RotatePointAroundOrigin (transform.position, rightVertex, transform.eulerAngles.z);
 		LineRenderer lr = sail.GetComponent<LineRenderer>();
-		lr.SetPosition(0, leftVertex);
-		lr.SetPosition (1, rightVertex);
+		lr.SetPosition(0, rotLeft);
+		lr.SetPosition (1, rotRight);
 		//Debug.Log ("Left: " + leftVertex + " | Right: " + rightVertex);
+		Debug.Log ("Rot Left: " + rotLeft + " | RotRight: " + rotRight);
 
     }
+
+	/*angle is in degrees*/ 
+	public static Vector2 RotatePointAroundOrigin(Vector2 localOrigin, Vector2 newLoc, float angle) {
+		angle = angle * Mathf.Deg2Rad; 
+		float xFinal = newLoc.x * Mathf.Cos (angle) - newLoc.y * Mathf.Sin (angle);
+		float yFinal = newLoc.y * Mathf.Cos (angle) + newLoc.x * Mathf.Sin (angle);
+
+		return new Vector2(xFinal + localOrigin.x, yFinal + localOrigin.y);
+
+
+		/*float angle = Mathf.Deg2Rad * a;
+		float xFinal = p.x * Mathf.Cos (angle) - p.y * Mathf.Sin (angle);
+		float yFinal = p.y * Mathf.Cos (angle) + p.x * Mathf.Sin (angle); 
+
+		return new Vector2(xFinal + p.x, yFinal + p.y);*/
+	}
 		
 	void OnTriggerStay2D(Collider2D coll) {
 		if(coll.tag == "Wind") {
-			float magnitude = 10f;
+			float magnitude = 2f;
 			//Assuming: Angle = 0 deg
 			//Assuming: Magnitude = 10f
 			/*
@@ -88,6 +107,10 @@ public class ShipControls : MonoBehaviour {
 			//float newMag = Mathf.Sqrt(Mathf.Pow(magnitude * Mathf.Cos (newAngle),2) + Mathf.Pow(magnitude * Mathf.Sin (newAngle),2));
 			Debug.Log ("New angle " + Mathf.Rad2Deg * newAngle + "New mag " + newMag); 
 			//rb.AddForceAtPosition ();
+			Vector2 v2 = new Vector2(newMag * Mathf.Cos(newAngle), newMag * Mathf.Sin(newAngle)); 
+			Vector2 pos = new Vector2 (0, 1.12f + ((leftRopeLength + rightRopeLength) / 2)); 
+			rb.AddForceAtPosition(v2,pos); 
+
 		}
 	}
 

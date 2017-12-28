@@ -26,18 +26,20 @@ public class ShipHull : MonoBehaviour {
 
     void RandomHoleGenerator()
     {
-		if (Random.value < 0.005)
+		if (Random.value < 0.1)
 		{
 			BoxCollider2D shipCollider = transform.parent.gameObject.GetComponent<BoxCollider2D> ();
 			float xPos = transform.position.x;
 			float yPos = transform.position.y;
-			float angle = Mathf.Deg2Rad * transform.eulerAngles.z; 
 			float randomX = Random.Range (- xDim, xDim); 
 			float randomY = Random.Range (- yDim, yDim); 
-			float xFinal = randomX * Mathf.Cos (angle) - randomY * Mathf.Sin (angle);
-			float yFinal = randomY * Mathf.Cos (angle) + randomX * Mathf.Sin (angle); 
+			/*float angle = Mathf.Deg2Rad * transform.eulerAngles.z; 
+			 * float xFinal = randomX * Mathf.Cos (angle) - randomY * Mathf.Sin (angle);
+			float yFinal = randomY * Mathf.Cos (angle) + randomX * Mathf.Sin (angle);
 
-			CreateHole(xFinal + xPos, yFinal + yPos);
+			CreateHole(xFinal + xPos, yFinal + yPos);*/
+			Vector2 v2 = ShipControls.RotatePointAroundOrigin (transform.position, new Vector2 (randomX, randomY), transform.eulerAngles.z);
+			CreateHole (v2.x, v2.y); 
        }
     }
 
