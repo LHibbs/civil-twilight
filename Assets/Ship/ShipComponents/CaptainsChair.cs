@@ -7,7 +7,11 @@ public class CaptainsChair : MonoBehaviour {
 	private Body activeBody;
 
 	public InputDevice PlayerInput {
-		get {return activeBody.PlayerInput; }
+		get { 
+			if(activeBody != null)
+				return activeBody.PlayerInput;
+			return null; 
+		}
 	}
 	// Use this for initialization
 	void Start () {
@@ -22,6 +26,7 @@ public class CaptainsChair : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D coll){
 		if(coll.tag == "Player")
 		{
+			Debug.Log ("Player entered!"); 
 			activeBody = coll.gameObject.GetComponent<Body> ();
 		}
 	}
@@ -29,6 +34,7 @@ public class CaptainsChair : MonoBehaviour {
 	void OnTriggerExit2D(Collider2D coll){
 		if(coll.tag == "Player")
 		{
+			Debug.Log ("Player exited!"); 
 			if( coll.gameObject.GetComponent<Body> () == activeBody) {
 				activeBody = null; 
 			}

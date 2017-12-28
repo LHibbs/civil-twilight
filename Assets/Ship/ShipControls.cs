@@ -9,7 +9,7 @@ public class ShipControls : MonoBehaviour {
 	private float maxMoveSpeed = 20f;
     private float rotateSpeed = 10f;
 	private float maxRotateSpeed = 40f;
-	private GameObject captainsChair; 
+	private CaptainsChair captainsChair; 
 
 	private GameObject sail;
 	private float leftRopeLength = 3f;
@@ -25,12 +25,13 @@ public class ShipControls : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody2D>();
-		captainsChair = GameObject.Find ("CaptainsChair"); 
+		captainsChair = (CaptainsChair) GameObject.Find ("CaptainsChair").GetComponent<CaptainsChair>();  
 		sail = GameObject.Find ("Sail");
     }
 
     // Update is called once per frame
     void Update () {
+
 
 		/*This is VELOCITY. We are now using forces
         // Forward/Backwards
@@ -38,15 +39,8 @@ public class ShipControls : MonoBehaviour {
         // Turn Left/Right
         rb.angularVelocity = rotateSpeed * Input.GetAxis("ShipHorizontal");
 		*/
-
-		//Forwad/Backwards
-		if(rb.velocity.magnitude > -maxMoveSpeed && rb.velocity.magnitude < maxMoveSpeed) {
-			rb.AddForce(transform.up * Input.GetAxis("ShipVertical") * moveSpeed);
-		}
-		//Turn
-		if(rb.angularVelocity > -maxRotateSpeed && rb.angularVelocity < maxRotateSpeed) {
-			rb.AddTorque (Input.GetAxis ("ShipHorizontal") * rotateSpeed);
-		} 
+		 
+		steerShip (); 
 
 		//Get my new rotation
 		float curAngle = transform.eulerAngles.z;
@@ -78,7 +72,7 @@ public class ShipControls : MonoBehaviour {
 		//Debug.Log ("Left: " + leftVertex + " | Right: " + rightVertex);
 
     }
-
+		
 	void OnTriggerStay2D(Collider2D coll) {
 		if(coll.tag == "Wind") {
 			float magnitude = 10f;
@@ -94,6 +88,20 @@ public class ShipControls : MonoBehaviour {
 			//float newMag = Mathf.Sqrt(Mathf.Pow(magnitude * Mathf.Cos (newAngle),2) + Mathf.Pow(magnitude * Mathf.Sin (newAngle),2));
 			Debug.Log ("New angle " + Mathf.Rad2Deg * newAngle + "New mag " + newMag); 
 			//rb.AddForceAtPosition ();
+		}
+	}
+
+	void steerShip(){
+		if(captainsChair.PlayerInput != null)
+		{
+			if(rb.velocity.magnitude > -maxMoveSpeed && rb.velocity.magnitude < maxMoveSpeed) {
+				rb.AddForce(transform.up * Input.GetAxis("ShipVertical") * moveSpeed);
+			}
+			//Turn
+			if(rb.angularVelocity > -maxRotateSpeed && rb.angularVelocity < maxRotateSpeed) {
+				rb.AddTorque (Input.GetAxis ("ShipHorizontal") * rotateSpeed);
+			}
+						
 		}
 	}
 		
