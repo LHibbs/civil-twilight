@@ -95,15 +95,35 @@ public class ShipControls : MonoBehaviour {
 		
 	void OnTriggerStay2D(Collider2D coll) {
 		if(coll.tag == "Wind") {
-			float magnitude = 2f;
-			//Assuming: Angle = 0 deg
-			//Assuming: Magnitude = 10f
-			float newAngle = Mathf.Atan ((rightRopeLength - leftRopeLength) / 4);
-			float newMag = Mathf.Cos (newAngle) * magnitude; 
-			Debug.Log ("New angle " + Mathf.Rad2Deg * newAngle + "New mag " + newMag); 
-			Vector2 v2 = new Vector2(newMag * Mathf.Sin(newAngle), newMag * Mathf.Cos(newAngle)); 
-			Vector2 pos = new Vector2 (transform.position.x, transform.position.y + shipHeight + ((leftRopeLength + rightRopeLength) / 2)); 
-			rb.AddForceAtPosition(v2,pos); 
+		/* magic number n = 10 degrees
+		 * If the sail is within 10 degrees of the current heading, change the heading of the ship by that much
+		 * The sail is static with the ship
+		 * This means, if the current changes subtly the entire ship will track
+		 * ex: current changes +8 degrees, ship changes + 8 degrees
+		 * 
+		 * ex2: current changes +30 degrees, sail at +20degrees, ship heading +10 degrees. 
+		 * Assuming current keeps changing, the ship will slowly track 
+		 *
+		 *deltaWind is the rate of change of the heading of the wind at every moment
+		 */ 
+			//my one wind as a degree of change of 3 (derivative of slope) 
+
+			float magicTolerance = 10f; 
+			float magicMaxMove = .01f;
+
+			float angleSail = Mathf.Atan((leftRopeLength - rightRopeLength) / shipWidth) * Mathf.Rad2Deg;
+			angleSail += transform.eulerAngles.z; 
+
+			WindBehavior wb = coll.GetComponent<WindBehavior> ();
+
+			Debug.Log ("angle sail " + angleSail + " angle current " + wb.CurrentHeading); 
+			if(Mathf.Abs(angleSail - wb.CurrentHeading) < magicTolerance) 
+			{
+				Vector3 temp = transform.eulerAngles;
+				temp.z += magicMaxMove;
+				transform.eulerAngles = temp;
+				rb.AddForce (transform.up * 2f); 
+			}
 
 		}
 	}
